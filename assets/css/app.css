@@ -1,3 +1,34 @@
 /* This file is for your main application css. */
 
 @import "./phoenix.css";
+
+.navigation li {
+  float: left;
+  margin-right: 20px;
+  list-style-type: none;
+}
+
+.urgency-option {
+  padding: 16px;
+  display: inline-block;
+  border: 1px solid white;
+}
+.urgency-low {
+  background-color: #FEFCBF;
+}
+.urgency-medium {
+  background-color: #FEEBC8;
+}
+.urgency-high {
+  background-color: #FED7D7;
+}
+.urgency-all {
+  border: 1px solid #CCCCCC;
+  margin-left: 8px;
+}
+.urgency-option:hover {
+  border: 1px solid gray;
+}
+.urgency-active {
+  border: 1px solid gray;
+}

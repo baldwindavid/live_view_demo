@@ -1,0 +1,81 @@
+<h1>Lead Management</h1>
+<!--
+Filtering / Live Links / Replace Page Address
+-->
+<%= for urgency <- @urgencies do %>
+  <%= if @urgency_filter == urgency do %>
+    <%= urgency %>
+  <% else %>
+    <%= live_patch urgency, to: Routes.live_path(@socket, LiveAppWeb.Lead.IndexLive, %{urgency: urgency}), replace: true, id: "urgency-filter-#{urgency}" %>
+  <% end %>
+  -
+<% end %>
+
+<%= if @urgency_filter do %>
+  <%= live_patch "all", to: Routes.live_path(@socket, LiveAppWeb.Lead.IndexLive, %{urgency: "all"}), replace: true, id: "urgency-filter-all" %>
+<% else %>
+  all
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th></th>
+      <th>Name</th>
+      <th>Phone</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+  <%= for lead <- @leads do %>
+    <%= if @current_lead_id == lead.id do %>
+      <tr>
+        <td colspan="4">
+          <%= f = form_for @changeset, "#", [phx_submit: "save", phx_change: "validate", class: "lead-form"] %>
+            <%= hidden_input f, :id %>
+            <fieldset>
+              <%= label f, :name %>
+              <%= text_input f, :name %>
+              <%= error_tag f, :name %>
+            </fieldset>
+            <fieldset>
+              <%= label f, :phone %>
+              <%= text_input f, :phone %>
+              <%= error_tag f, :phone %>
+            </fieldset>
+            <fieldset>
+              <%= label f, :urgency %>
+              <!--
+              JS Interop
+              -->
+              <div phx-hook="UrgencySelector" phx-update="ignore">
+                <%= hidden_input f, :urgency, "data-target": "input" %>
+                <%= for urgency <- @urgencies do %>
+                  <a href="#" class="urgency-option urgency-<%= urgency %>" data-level="<%= urgency %>" data-target="option"></a>
+                <% end %>
+              </div>
+              <%= error_tag f, :urgency %>
+            </fieldset>
+            <%= submit("Submit") %>
+            -
+            <%= link "Cancel", to: "#", phx_click: "cancel", phx_value_id: lead.id, class: "action-link" %>
+          </form>
+        </td>
+      </tr>
+    <% else %>
+      <tr>
+        <td class="urgency-<%= lead.urgency %>">
+        <td><%= lead.name %></td>
+        <td><%= lead.phone %></td>
+        <td>
+        <!--
+        Click Events With Values
+        -->
+          <%= link "Edit", to: "#", phx_click: "edit", phx_value_id: lead.id %>
+          |
+          <%= link "Delete", to: "#", phx_click: "delete", phx_value_id: lead.id %>
+        </td>
+      </tr>
+    <% end %>
+  <% end %>
+</table>

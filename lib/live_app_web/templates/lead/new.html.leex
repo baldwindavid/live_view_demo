@@ -1,0 +1,33 @@
+<%= if @lead_submitted do %>
+
+  <h1>Thank you. You've made a big mistake.</h1>
+  <!--
+  Click Events
+  -->
+  <%= link "Submit another for a friend", to: "#", phx_click: "reset" %>
+
+<% else %>
+
+  <section class="phx-hero">
+    <h1>Lead Intake</h1>
+    <p>Fill out this form to be contacted incessantly.</p>
+  </section>
+
+  <!--
+  Form Validation
+  -->
+  <%= f = form_for @changeset, "#", [phx_submit: "save", phx_change: "validate"] %>
+    <fieldset>
+      <%= label f, :name %>
+      <%= text_input f, :name %>
+      <%= error_tag f, :name %>
+    </fieldset>
+    <fieldset>
+      <%= label f, :phone %>
+      <%= text_input f, :phone %>
+      <%= error_tag f, :phone %>
+    </fieldset>
+    <%= submit("Submit") %>
+  </form>
+
+<% end %>
